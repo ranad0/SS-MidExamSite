@@ -401,6 +401,97 @@ button:hover{transform:translateY(-1px)}
   .progress-dashboard{grid-template-columns:1fr 1fr}
 }
 
+
+/* ===== PERFECT LAYOUT FIX ===== */
+.clean-nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  padding:8px 10px !important;
+  max-height:none;
+}
+.primary-nav{
+  margin-bottom:6px !important;
+  gap:6px !important;
+}
+.primary-nav button,
+.study-panel button{
+  padding:7px 10px !important;
+  font-size:12px !important;
+}
+.study-panel{
+  padding:7px !important;
+  gap:6px !important;
+}
+.study-panel select{
+  padding:7px 9px !important;
+  font-size:12px !important;
+}
+.mode-status{
+  margin:6px auto 0 !important;
+  padding:7px 10px !important;
+  font-size:12px !important;
+}
+.progress-dashboard,
+.big-progress,
+.progress-caption{
+  display:none;
+}
+body.show-progress .progress-dashboard{
+  display:grid;
+  margin:8px auto !important;
+  gap:8px !important;
+}
+body.show-progress .big-progress,
+body.show-progress .progress-caption{
+  display:block;
+}
+body.show-progress .progress-box{
+  padding:8px !important;
+}
+body.show-progress .progress-box b{
+  font-size:17px !important;
+}
+body.show-progress .progress-box span{
+  font-size:11px !important;
+}
+body.show-progress .big-progress{
+  height:8px !important;
+}
+.progress-toggle-btn{
+  background:rgba(37,99,235,.25)!important;
+  border-color:rgba(96,165,250,.45)!important;
+}
+main{
+  scroll-margin-top:120px;
+}
+section{
+  scroll-margin-top:125px;
+}
+@media(max-width:850px){
+  .clean-nav{
+    position:sticky;
+    padding:7px 8px !important;
+  }
+  .primary-nav{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    justify-content:flex-start;
+    padding-bottom:4px;
+  }
+  .primary-nav button{
+    white-space:nowrap;
+  }
+  .study-panel{
+    max-height:90px;
+    overflow-y:auto;
+    justify-content:flex-start;
+  }
+  body.show-progress .progress-dashboard{
+    grid-template-columns:1fr 1fr !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -436,6 +527,7 @@ button:hover{transform:translateY(-1px)}
     <button id="mode_weak" class="danger-btn" onclick="setStudyMode('weak')">🎯 Weak / Wrong</button>
     <button id="mode_auto" class="green-btn" onclick="autoStudyFlow()">⚡ Auto Flow</button>
     <button onclick="nextLecture()">➡️ Next Lecture</button>
+    <button class="progress-toggle-btn" onclick="toggleProgressPanel()">📊 Progress</button>
     <button onclick="toggleDark()">🌓 Theme</button>
     <button onclick="resetAll()">Reset</button>
   </div><div id="modeStatus" class="mode-status"><b>Mode:</b> All study content is visible. Choose a lecture or a study mode to focus.</div>
@@ -463,7 +555,7 @@ button:hover{transform:translateY(-1px)}
    <div class="card study-guide-box">
      <h2 style="margin-top:0">🚀 How to use this site without getting lost</h2>
      <p style="color:var(--muted);line-height:1.7">
-       Use the top navigation for the study stage, and use the control panel to filter by lecture or switch study mode.
+       Use the top navigation for the study stage, and use the control panel to filter by lecture or switch study mode. Open 📊 Progress only when you want to check your progress.
        Recommended order: <b>High Yield → Flashcards → Wrong Questions → Exam Simulator → Cheat Reviews</b>.
      </p>
      <div class="study-steps">
@@ -928,6 +1020,14 @@ function renderHighYield(){
   if(target) target.innerHTML=h;
 }
 
+
+
+function toggleProgressPanel(){
+  document.body.classList.toggle('show-progress');
+  updateProgressDashboard();
+  const visible=document.body.classList.contains('show-progress');
+  setModeStatus(visible ? '<b>Progress panel:</b> Open. Click 📊 Progress again to hide it.' : '<b>Progress panel:</b> Hidden for comfortable studying.');
+}
 
 function getVisibleFlashcardStats(){
   let total=0, done=0;
