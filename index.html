@@ -131,13 +131,13 @@ button:hover{transform:translateY(-1px)}
  <button onclick="go('memorize')">🗓️ Must-Memorize</button>
  <button onclick="go('blanks')">✍️ Fill Blanks</button>
  <button onclick="go('simulator')">🧪 Exam Simulator</button>
- <button class="lecture-chip" id="chip_ALL" onclick="filterLecture('ALL')">🌐 All Lectures</button>
- <button class="lecture-chip" id="chip_L1" onclick="filterLecture('L1')">L1 Foundation</button>
- <button class="lecture-chip" id="chip_L2" onclick="filterLecture('L2')">L2 NLP & CV</button>
- <button class="lecture-chip" id="chip_L3" onclick="filterLecture('L3')">L3 CNN & RNN</button>
- <button class="lecture-chip" id="chip_L4" onclick="filterLecture('L4')">L4 Transformers</button>
- <button class="lecture-chip" id="chip_L5" onclick="filterLecture('L5')">L5 BERT</button>
- <button class="lecture-chip" id="chip_L6" onclick="filterLecture('L6')">L6 LLM</button>
+ <button class="lecture-chip" id="chip_ALL" onclick="selectLecture('ALL')">🌐 All Lectures</button>
+ <button class="lecture-chip" id="chip_L1" onclick="selectLecture('L1')">L1 Foundation</button>
+ <button class="lecture-chip" id="chip_L2" onclick="selectLecture('L2')">L2 NLP & CV</button>
+ <button class="lecture-chip" id="chip_L3" onclick="selectLecture('L3')">L3 CNN & RNN</button>
+ <button class="lecture-chip" id="chip_L4" onclick="selectLecture('L4')">L4 Transformers</button>
+ <button class="lecture-chip" id="chip_L5" onclick="selectLecture('L5')">L5 BERT</button>
+ <button class="lecture-chip" id="chip_L6" onclick="selectLecture('L6')">L6 LLM</button>
  <button onclick="nextLecture()">➡️ Next Lecture</button>
  <button onclick="startWeakMode()">🎯 Weak Topics</button>
  <button onclick="startPredictionMode()">🔮 Exam Prediction</button>
@@ -180,9 +180,9 @@ function filterLecture(lec){
  showToast(lec==='ALL' ? 'Showing all lectures 🌐' : lec + ' filter activated ✅');
 }
 function nextLecture(){
- const idx=LECTURES.indexOf(currentLecture);
- const next=LECTURES[(idx+1)%LECTURES.length];
- filterLecture(next);
+  const idx = LECTURES.indexOf(currentLecture);
+  const next = LECTURES[(idx + 1) % LECTURES.length];
+  selectLecture(next);
 }
 function updateChips(){
  document.querySelectorAll('.lecture-chip').forEach(b=>b.classList.remove('active'));
@@ -287,21 +287,51 @@ function mcqCard(q, id) {
    <span class="badge">${q.topic.split('-')[0]}</span><span class="badge">${q.difficulty}</span>
    <div class="question">${q.q}</div>${opts}<div class="explanation" id="exp_${id}"></div></div>`;
 }
+
 function renderMCQ() {
- const term=document.getElementById('search').value.toLowerCase().trim();
- let h='<div class="section-title"><h2>🧠 MCQ Bank by Lecture</h2><span class="badge">20+ per lecture</span></div>';
- Object.entries(DATA.mcqs).forEach(([lec, qs])=>{
-   h+=`<div class="card"><h2>${lec}</h2></div>`;
-   qs.forEach((q,i)=>{
-    const id='mcq_'+lec.replace(/[^a-z0-9]/gi,'_')+'_'+i;
-    const text=(q.q+' '+q.options.join(' ')+' '+q.explain).toLowerCase();
-    if(term && !text.includes(term)) return;
-    if(onlyWrong && !wrongCards.has(id)) return;
-    h+=mcqCard(q,id);
-   });
- });
- document.getElementById('mcq').innerHTML=h;
+  const term = document.getElementById('search').value.toLowerCase().trim();
+  let h = '<div class="section-title"><h2>🧠 MCQ Bank by Lecture</h2><span class="badge">Filtered: ' + currentLecture + '</span></div>';
+
+  if(insaneMode === 'weak'){
+    h += '<div class="card prediction-card"><h2>🎯 Weak Topics Mode</h2><p>Only questions you previously answered wrong are shown.</p></div>';
+  }
+
+  if(insaneMode === 'prediction'){
+    h += '<div class="card prediction-card"><h2>🔮 Exam Prediction Mode</h2><p>Highest-yield concepts appear first.</p></div>';
+  }
+
+  Object.entries(DATA.mcqs).forEach(([lec, qs]) => {
+    if(currentLecture !== 'ALL' && !lec.startsWith(currentLecture)) return;
+
+    let filtered = qs.map((q, i) => ({ q, i }));
+
+    if(insaneMode === 'prediction'){
+      const hot = ['bert','mlm','nsp','transformer','attention','rnn','foundation','specialized','transfer','zero-shot','few-shot','context','api','emergent','cnn','nlp','cv','multimodal'];
+      filtered.sort((a,b) => {
+        const A = (a.q.q + ' ' + a.q.explain).toLowerCase();
+        const B = (b.q.q + ' ' + b.q.explain).toLowerCase();
+        const sa = hot.some(x => A.includes(x)) ? 1 : 0;
+        const sb = hot.some(x => B.includes(x)) ? 1 : 0;
+        return sb - sa;
+      });
+    }
+
+    h += `<div class="card"><h2>${lec}</h2></div>`;
+
+    filtered.forEach(({q, i}) => {
+      const id = 'mcq_' + lec.replace(/[^a-z0-9]/gi,'_') + '_' + i;
+      const text = (q.q + ' ' + q.options.join(' ') + ' ' + q.explain).toLowerCase();
+
+      if(term && !text.includes(term)) return;
+      if((onlyWrong || insaneMode === 'weak') && !wrongCards.has(id)) return;
+
+      h += mcqCard(q, id);
+    });
+  });
+
+  document.getElementById('mcq').innerHTML = h;
 }
+
 function choose(id, selected, el) {
  const parts=id.split('_'); 
  let q=null;
@@ -354,7 +384,30 @@ function startExam(n){examSet=[...DATA.exam].sort(()=>Math.random()-.5).slice(0,
 function showExamQ(){const area=document.getElementById('examArea');if(examIndex>=examSet.length){area.innerHTML=`<div class="card"><h2>Final Score: ${examScore} / ${examSet.length}</h2><p>Review wrong topics and retry.</p></div>`;return} const q=examSet[examIndex];area.innerHTML=`<div class="card"><span class="badge">${q.lecture.split('-')[0]}</span><h3>Q${examIndex+1}/${examSet.length}: ${q.q}</h3>${q.options.map((o,i)=>`<div class="option" onclick="examChoose(${i},this)">${String.fromCharCode(65+i)}. ${o}</div>`).join('')}<div class="explanation" id="examExp"></div></div>`}
 function examChoose(sel,el){const q=examSet[examIndex];const opts=el.parentElement.querySelectorAll('.option');opts.forEach((o,i)=>{o.onclick=null;if(i===q.answer)o.classList.add('correct')});const ok=sel===q.answer;if(ok){examScore++;examExp.innerHTML='<b>✅ Correct.</b><br>'+q.explain}else{el.classList.add('wrong');examExp.innerHTML='<b>❌ Wrong.</b><br>'+q.explain+'<br><br><b>Correct:</b> '+q.options[q.answer]}examExp.classList.add('show');setTimeout(()=>{examIndex++;showExamQ()},2200)}
 function renderAll(){renderMCQ();renderFlashcards();renderReviews();renderTraps();renderMemorize();renderBlanks();renderSimulator();updateStats()}
+
+function selectLecture(lec){
+  currentLecture = lec;
+  onlyWrong = false;
+  insaneMode = false;
+
+  // Reset button active styles
+  document.querySelectorAll('.lecture-chip').forEach(btn => btn.classList.remove('active'));
+  const chip = document.getElementById('chip_' + lec);
+  if(chip) chip.classList.add('active');
+
+  renderAll();
+
+  // Scroll after rendering so the section exists and is positioned correctly
+  setTimeout(() => {
+    const target = document.getElementById('mcq');
+    if(target){
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 150);
+}
+
 renderAll();
+selectLecture('ALL');
 </script>
 </body>
 </html>
