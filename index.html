@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🔥 AI Midterm Ace - MCQ Mastery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#e2e8f0;
+  --accent:#3b82f6;
+  --green:#22c55e;
+  --red:#ef4444;
+}
+
+body{
+  font-family:Arial;
+  background:var(--bg);
+  color:var(--text);
+  margin:0;
+}
+
+header{
+  text-align:center;
+  padding:20px;
+  font-size:22px;
+}
+
+.nav{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:15px;
+}
+
+button{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:10px;
+}
+
+.card{
+  background:var(--card);
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+
+.option{
+  padding:8px;
+  margin:5px 0;
+  border-radius:6px;
+  cursor:pointer;
+  background:#334155;
+}
+
+.option:hover{background:#475569}
+
+.correct{background:var(--green)}
+.wrong{background:var(--red)}
+
+.hidden{display:none}
+
+footer{
+  text-align:center;
+  margin-top:40px;
+  padding:20px;
+  opacity:0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+🔥 AI Midterm MCQ Mastery Site  
+<br><small>Built by RJ • Powered by AI 🤖</small>
+</header>
+
+<div class="nav">
+<button onclick="show('l1')">L1</button>
+<button onclick="show('l4')">Transformers</button>
+<button onclick="show('bert')">BERT</button>
+<button onclick="show('sim')">Exam Mode</button>
+</div>
+
+<div class="container">
+
+<!-- SECTION -->
+<div id="l1" class="section">
+<h2>🧠 Foundation Models</h2>
+
+<div class="card">
+<b>Which best describes Foundation Models?</b>
+
+<div class="option" onclick="check(this,false)">Small models for one task</div>
+<div class="option" onclick="check(this,false)">Models trained on small data</div>
+<div class="option" onclick="check(this,true)">Large models trained on massive data used for many tasks</div>
+<div class="option" onclick="check(this,false)">Models that only do classification</div>
+
+<p class="hidden">✔ Huge model + many tasks</p>
+</div>
+
+<div class="card">
+<b>What is generalization?</b>
+
+<div class="option" onclick="check(this,true)">Ability to handle unseen data</div>
+<div class="option" onclick="check(this,false)">Model size</div>
+<div class="option" onclick="check(this,false)">Training speed</div>
+<div class="option" onclick="check(this,false)">Accuracy only</div>
+</div>
+
+</div>
+
+<!-- SECTION -->
+<div id="l4" class="section hidden">
+<h2>🔥 Attention & Transformers</h2>
+
+<div class="card">
+<b>Why are Transformers better than RNNs?</b>
+
+<div class="option" onclick="check(this,false)">Use fewer parameters</div>
+<div class="option" onclick="check(this,true)">Process all tokens in parallel</div>
+<div class="option" onclick="check(this,false)">Only work on images</div>
+<div class="option" onclick="check(this,false)">Do not use attention</div>
+</div>
+
+<div class="card">
+<b>What does self-attention do?</b>
+
+<div class="option" onclick="check(this,true)">Each token attends to all others</div>
+<div class="option" onclick="check(this,false)">Processes tokens sequentially</div>
+<div class="option" onclick="check(this,false)">Reduces parameters</div>
+<div class="option" onclick="check(this,false)">Removes context</div>
+</div>
+
+</div>
+
+<!-- SECTION -->
+<div id="bert" class="section hidden">
+<h2>🟡 BERT</h2>
+
+<div class="card">
+<b>What does BERT stand for?</b>
+
+<div class="option" onclick="check(this,true)">Bidirectional Encoder Representations from Transformers</div>
+<div class="option" onclick="check(this,false)">Basic Encoder Model</div>
+<div class="option" onclick="check(this,false)">Transformer Decoder Model</div>
+<div class="option" onclick="check(this,false)">None</div>
+</div>
+
+<div class="card">
+<b>How is BERT trained?</b>
+
+<div class="option" onclick="check(this,true)">Masked Language Model + Next Sentence Prediction</div>
+<div class="option" onclick="check(this,false)">Only classification</div>
+<div class="option" onclick="check(this,false)">Only translation</div>
+<div class="option" onclick="check(this,false)">Random training</div>
+</div>
+
+</div>
+
+<!-- EXAM MODE -->
+<div id="sim" class="section hidden">
+<h2>🧪 Exam Simulator</h2>
+
+<div class="card">
+<b>Which is true about RNN?</b>
+
+<div class="option" onclick="check(this,true)">Processes sequentially</div>
+<div class="option" onclick="check(this,false)">Parallel processing</div>
+<div class="option" onclick="check(this,false)">Uses attention only</div>
+<div class="option" onclick="check(this,false)">No memory</div>
+</div>
+
+<div class="card">
+<b>Zero-shot learning means:</b>
+
+<div class="option" onclick="check(this,true)">No examples given</div>
+<div class="option" onclick="check(this,false)">Many examples</div>
+<div class="option" onclick="check(this,false)">One example</div>
+<div class="option" onclick="check(this,false)">Training from scratch</div>
+</div>
+
+</div>
+
+</div>
+
+<footer>
+Built by RJ • Powered by AI 🤖✨
+</footer>
+
+<script>
+
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'))
+  document.getElementById(id).classList.remove('hidden')
+}
+
+function check(el,correct){
+  if(correct){
+    el.classList.add('correct')
+  }else{
+    el.classList.add('wrong')
+  }
+}
+
+</script>
+
+</body>
+</html>
