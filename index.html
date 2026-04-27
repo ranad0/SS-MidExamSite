@@ -2,222 +2,186 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🔥 AI Midterm Ace - MCQ Mastery</title>
+<title>SS Midterm MCQ Mastery</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-:root{
-  --bg:#0f172a;
-  --card:#1e293b;
-  --text:#e2e8f0;
-  --accent:#3b82f6;
-  --green:#22c55e;
-  --red:#ef4444;
+:root {
+  --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --blue:#2563eb; --green:#16a34a; --red:#dc2626; --gold:#f59e0b; --purple:#7c3aed;
+  --shadow:0 14px 35px rgba(15,23,42,.10);
 }
-
-body{
-  font-family:Arial;
-  background:var(--bg);
-  color:var(--text);
-  margin:0;
+.dark {
+  --bg:#0f172a; --card:#1e293b; --text:#e2e8f0; --muted:#cbd5e1; --line:#334155;
+  --shadow:0 14px 35px rgba(0,0,0,.28);
 }
-
-header{
-  text-align:center;
-  padding:20px;
-  font-size:22px;
+* { box-sizing:border-box; }
+body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:var(--bg); color:var(--text); }
+.hero {
+  padding:28px 18px; text-align:center; color:white;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  border-bottom-left-radius:28px; border-bottom-right-radius:28px;
 }
-
-.nav{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-bottom:15px;
+.hero h1 { margin:0; font-size:clamp(28px,5vw,46px); }
+.hero p { margin:10px auto 0; max-width:850px; opacity:.95; line-height:1.6; }
+.nav {
+  position:sticky; top:0; z-index:5; background:var(--card); border-bottom:1px solid var(--line);
+  padding:12px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
 }
-
-button{
-  padding:8px 12px;
-  border:none;
-  border-radius:8px;
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
+button {
+  border:1px solid var(--line); background:var(--card); color:var(--text);
+  border-radius:999px; padding:9px 13px; font-weight:700; cursor:pointer;
+  box-shadow:0 5px 14px rgba(0,0,0,.06);
 }
-
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:10px;
+button:hover { transform:translateY(-1px); }
+.container { max-width:1050px; margin:22px auto; padding:0 14px; }
+.section { display:none; }
+.section.active { display:block; }
+.card {
+  background:var(--card); border:1px solid var(--line); border-radius:20px;
+  padding:18px; margin:14px 0; box-shadow:var(--shadow);
 }
-
-.card{
-  background:var(--card);
-  padding:15px;
-  margin:10px 0;
-  border-radius:10px;
+.question { font-size:18px; font-weight:850; line-height:1.45; margin-bottom:12px; }
+.option {
+  padding:12px 14px; border:1px solid var(--line); border-radius:14px;
+  margin:8px 0; cursor:pointer; background:rgba(37,99,235,.06);
 }
-
-.option{
-  padding:8px;
-  margin:5px 0;
-  border-radius:6px;
-  cursor:pointer;
-  background:#334155;
+.option:hover { background:rgba(37,99,235,.14); }
+.option.correct { background:rgba(22,163,74,.18); border-color:var(--green); }
+.option.wrong { background:rgba(220,38,38,.15); border-color:var(--red); }
+.explanation {
+  display:none; margin-top:12px; padding:13px; border-radius:14px;
+  border-left:5px solid var(--blue); background:rgba(37,99,235,.08); line-height:1.6;
 }
-
-.option:hover{background:#475569}
-
-.correct{background:var(--green)}
-.wrong{background:var(--red)}
-
-.hidden{display:none}
-
-footer{
-  text-align:center;
-  margin-top:40px;
-  padding:20px;
-  opacity:0.7;
+.explanation.show { display:block; }
+.scorebar {
+  display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+  background:var(--card); border:1px solid var(--line); padding:14px;
+  border-radius:18px; box-shadow:var(--shadow); margin-bottom:16px;
 }
+.badge { padding:7px 10px; border-radius:999px; background:rgba(124,58,237,.12); color:var(--purple); font-weight:800; }
+.search { width:100%; padding:12px; border-radius:14px; border:1px solid var(--line); background:var(--card); color:var(--text); margin:10px 0; }
+footer { text-align:center; padding:22px; color:var(--muted); border-top:1px solid var(--line); margin-top:40px; }
 </style>
 </head>
-
 <body>
-
-<header>
-🔥 AI Midterm MCQ Mastery Site  
-<br><small>Built by RJ • Powered by AI 🤖</small>
-</header>
+<div class="hero">
+  <h1>🔥 Smart Systems Midterm MCQ Mastery</h1>
+  <p>Choose any answer. Whether it is right or wrong, you will get an explanation so you understand the idea, not just memorize the answer.</p>
+</div>
 
 <div class="nav">
-<button onclick="show('l1')">L1</button>
-<button onclick="show('l4')">Transformers</button>
-<button onclick="show('bert')">BERT</button>
-<button onclick="show('sim')">Exam Mode</button>
+  <button onclick="showSection('all')">🧠 All MCQs</button>
+  <button onclick="showSection('L1-Introduction to Foundation Models')">L1 Foundation</button>
+  <button onclick="showSection('L2-NLP and CV')">L2 NLP & CV</button>
+  <button onclick="showSection('L3-CNN & RNN')">L3 CNN & RNN</button>
+  <button onclick="showSection('L4-Attention, Self-Attention and Transformers')">L4 Transformers</button>
+  <button onclick="showSection('L5-Language Model Pretraining and BERT')">L5 BERT</button>
+  <button onclick="showSection('L6-Large Language Model')">L6 LLM</button>
+  <button onclick="toggleDark()">🌓 Theme</button>
+  <button onclick="resetScore()">Reset Score</button>
 </div>
 
 <div class="container">
-
-<!-- SECTION -->
-<div id="l1" class="section">
-<h2>🧠 Foundation Models</h2>
-
-<div class="card">
-<b>Which best describes Foundation Models?</b>
-
-<div class="option" onclick="check(this,false)">Small models for one task</div>
-<div class="option" onclick="check(this,false)">Models trained on small data</div>
-<div class="option" onclick="check(this,true)">Large models trained on massive data used for many tasks</div>
-<div class="option" onclick="check(this,false)">Models that only do classification</div>
-
-<p class="hidden">✔ Huge model + many tasks</p>
-</div>
-
-<div class="card">
-<b>What is generalization?</b>
-
-<div class="option" onclick="check(this,true)">Ability to handle unseen data</div>
-<div class="option" onclick="check(this,false)">Model size</div>
-<div class="option" onclick="check(this,false)">Training speed</div>
-<div class="option" onclick="check(this,false)">Accuracy only</div>
-</div>
-
-</div>
-
-<!-- SECTION -->
-<div id="l4" class="section hidden">
-<h2>🔥 Attention & Transformers</h2>
-
-<div class="card">
-<b>Why are Transformers better than RNNs?</b>
-
-<div class="option" onclick="check(this,false)">Use fewer parameters</div>
-<div class="option" onclick="check(this,true)">Process all tokens in parallel</div>
-<div class="option" onclick="check(this,false)">Only work on images</div>
-<div class="option" onclick="check(this,false)">Do not use attention</div>
-</div>
-
-<div class="card">
-<b>What does self-attention do?</b>
-
-<div class="option" onclick="check(this,true)">Each token attends to all others</div>
-<div class="option" onclick="check(this,false)">Processes tokens sequentially</div>
-<div class="option" onclick="check(this,false)">Reduces parameters</div>
-<div class="option" onclick="check(this,false)">Removes context</div>
-</div>
-
-</div>
-
-<!-- SECTION -->
-<div id="bert" class="section hidden">
-<h2>🟡 BERT</h2>
-
-<div class="card">
-<b>What does BERT stand for?</b>
-
-<div class="option" onclick="check(this,true)">Bidirectional Encoder Representations from Transformers</div>
-<div class="option" onclick="check(this,false)">Basic Encoder Model</div>
-<div class="option" onclick="check(this,false)">Transformer Decoder Model</div>
-<div class="option" onclick="check(this,false)">None</div>
-</div>
-
-<div class="card">
-<b>How is BERT trained?</b>
-
-<div class="option" onclick="check(this,true)">Masked Language Model + Next Sentence Prediction</div>
-<div class="option" onclick="check(this,false)">Only classification</div>
-<div class="option" onclick="check(this,false)">Only translation</div>
-<div class="option" onclick="check(this,false)">Random training</div>
-</div>
-
-</div>
-
-<!-- EXAM MODE -->
-<div id="sim" class="section hidden">
-<h2>🧪 Exam Simulator</h2>
-
-<div class="card">
-<b>Which is true about RNN?</b>
-
-<div class="option" onclick="check(this,true)">Processes sequentially</div>
-<div class="option" onclick="check(this,false)">Parallel processing</div>
-<div class="option" onclick="check(this,false)">Uses attention only</div>
-<div class="option" onclick="check(this,false)">No memory</div>
-</div>
-
-<div class="card">
-<b>Zero-shot learning means:</b>
-
-<div class="option" onclick="check(this,true)">No examples given</div>
-<div class="option" onclick="check(this,false)">Many examples</div>
-<div class="option" onclick="check(this,false)">One example</div>
-<div class="option" onclick="check(this,false)">Training from scratch</div>
-</div>
-
-</div>
-
+  <div class="scorebar">
+    <span class="badge">Score: <span id="score">0</span></span>
+    <span class="badge">Answered: <span id="answered">0</span></span>
+    <span class="badge">Tip: Read explanations for wrong answers.</span>
+  </div>
+  <input class="search" id="search" placeholder="Search: BERT, attention, CNN, zero-shot..." oninput="render()">
+  <div id="content"></div>
 </div>
 
 <footer>
-Built by RJ • Powered by AI 🤖✨
+  Built by <b>RJ</b> • Powered by AI 🤖✨
 </footer>
 
 <script>
+const DATA = {"L1-Introduction to Foundation Models": [{"q": "Which statement best describes a Foundation Model?", "options": ["A small model trained for one specific task only", "A large model trained on massive data and adaptable to many tasks", "A model that only works for image classification", "A model that does not require training data"], "answer": 1, "explain": {"correct": "Correct. Foundation Models are large models trained on huge, diverse datasets and can be adapted or prompted for many downstream tasks.", "wrong": "Not quite. Foundation Models are not small task-specific models; their main idea is scale, generality, and adaptability."}}, {"q": "What is the correct evolution of deep learning paradigms?", "options": ["Foundation DL → Transfer DL → Specialized DL", "Specialized DL → Transfer DL → Foundation DL", "Transfer DL → Specialized DL → Foundation DL", "CNN → RNN → BERT"], "answer": 1, "explain": {"correct": "Correct. The course presents the evolution as Specialized Deep Learning, then Transfer Learning, then Foundation Models.", "wrong": "Wrong order. Specialized models came first, then transfer learning, then foundation models after large-scale pretraining and prompting."}}, {"q": "What does generalization mean?", "options": ["The number of parameters in a model", "The ability to perform well on unseen cases", "The size of the dataset only", "The number of layers in the network"], "answer": 1, "explain": {"correct": "Correct. Generalization means the model can handle new/unseen examples, not only the data it trained on.", "wrong": "Incorrect. Generalization is about performance on unseen cases, not model size, data size, or number of layers."}}], "L2-NLP and CV": [{"q": "Which task belongs to NLP?", "options": ["Object detection", "Semantic segmentation", "Named Entity Recognition", "Image captioning only"], "answer": 2, "explain": {"correct": "Correct. NER is an NLP task where the model identifies entities like people, organizations, and locations in text.", "wrong": "Incorrect. Object detection and segmentation are CV tasks. NER is the NLP task here."}}, {"q": "What is the main difference between NLP and CV?", "options": ["NLP works mainly with text/language, CV works mainly with images/visual data", "NLP is always supervised, CV is always unsupervised", "CV only uses RNNs and NLP only uses CNNs", "There is no difference"], "answer": 0, "explain": {"correct": "Correct. NLP focuses on human language, while CV focuses on images, videos, and visual understanding.", "wrong": "Not correct. The key distinction is data modality: NLP = text/language, CV = visual data."}}], "L3-CNN & RNN": [{"q": "Why are CNNs commonly used for image data?", "options": ["They ignore spatial structure", "They preserve spatial locality and use filters to extract features", "They process text one token at a time", "They cannot learn features automatically"], "answer": 1, "explain": {"correct": "Correct. CNNs preserve spatial structure and use learnable filters/kernels to extract features such as edges, textures, and shapes.", "wrong": "Incorrect. CNNs are strong for images because they preserve spatial locality and learn filters automatically."}}, {"q": "What is a major limitation of RNNs?", "options": ["They process sequences sequentially and struggle with long-range dependencies", "They process all tokens in parallel", "They do not use hidden states", "They are mainly designed for image pixels"], "answer": 0, "explain": {"correct": "Correct. RNNs read sequences step by step, which makes them slower and can cause forgetting of earlier context.", "wrong": "Incorrect. The key RNN limitation is sequential processing and difficulty with long-range dependencies."}}], "L4-Attention, Self-Attention and Transformers": [{"q": "What is the main idea of attention?", "options": ["Ignore all previous tokens", "Focus on the most relevant parts of the input when making a prediction", "Remove context from the input", "Force the model to process only images"], "answer": 1, "explain": {"correct": "Correct. Attention lets the model assign importance to different parts of the input instead of treating everything equally.", "wrong": "Not correct. Attention is about focusing on relevant information, not ignoring context."}}, {"q": "What happens in self-attention?", "options": ["Each token attends to other tokens in the same sequence", "The model only looks at the previous token", "The model removes positional information", "The model uses only convolution"], "answer": 0, "explain": {"correct": "Correct. In self-attention, tokens compare themselves with other tokens in the same input sequence.", "wrong": "Incorrect. Self-attention means the sequence attends to itself: every token can relate to other tokens in the same sequence."}}, {"q": "Why are Transformers better than RNNs for many sequence tasks?", "options": ["They must process words one by one", "They allow parallel processing and better long-range context handling", "They cannot use attention", "They work only for small datasets"], "answer": 1, "explain": {"correct": "Correct. Transformers avoid recurrence, process tokens in parallel, and use attention to model long-range dependencies.", "wrong": "Incorrect. Transformers are powerful because they process in parallel and handle long-range relationships better than RNNs."}}], "L5-Language Model Pretraining and BERT": [{"q": "What does BERT stand for?", "options": ["Basic Encoder Recurrent Transformer", "Bidirectional Encoder Representations from Transformers", "Backward Encoding Recurrent Training", "Bidirectional Embedding Rule Transformer"], "answer": 1, "explain": {"correct": "Correct. BERT stands for Bidirectional Encoder Representations from Transformers.", "wrong": "Incorrect. The correct expansion is Bidirectional Encoder Representations from Transformers."}}, {"q": "What are BERT's two original pretraining objectives?", "options": ["Next word prediction and image classification", "Masked Language Modeling and Next Sentence Prediction", "Translation and segmentation", "Object detection and captioning"], "answer": 1, "explain": {"correct": "Correct. BERT was trained using Masked Language Modeling (MLM) and Next Sentence Prediction (NSP).", "wrong": "Incorrect. BERT's key pretraining tasks are MLM and NSP."}}, {"q": "Why is BERT called bidirectional?", "options": ["It only reads from left to right", "It only reads from right to left", "It uses both left and right context simultaneously", "It cannot use context"], "answer": 2, "explain": {"correct": "Correct. BERT uses transformer encoders to look at both left and right context at the same time.", "wrong": "Not correct. BERT is bidirectional because it uses context from both directions, not only one side."}}], "L6-Large Language Model": [{"q": "What is zero-shot learning?", "options": ["The model solves a task without examples in the prompt", "The model sees one example", "The model sees many labeled examples", "The model is trained from scratch"], "answer": 0, "explain": {"correct": "Correct. Zero-shot means the model attempts the task without being given examples.", "wrong": "Incorrect. Zero-shot means no examples are provided. One-shot and few-shot involve examples."}}, {"q": "What are emergent abilities?", "options": ["Abilities that appear only in very small models", "Capabilities that appear when models scale up significantly", "Errors caused by poor training data", "A type of convolution filter"], "answer": 1, "explain": {"correct": "Correct. Emergent abilities are capabilities that appear when models become large enough, such as strong zero-shot/few-shot performance.", "wrong": "Incorrect. Emergent abilities are linked to scale: they appear as model size and data increase."}}, {"q": "What is a multimodal model?", "options": ["A model that only reads text", "A model that handles multiple data types such as text, images, and video", "A model that only performs classification", "A model with no parameters"], "answer": 1, "explain": {"correct": "Correct. Multimodal models can process and relate different modalities such as text, images, audio, and video.", "wrong": "Incorrect. Multimodal means multiple forms of data, not text-only or classification-only."}}]};
+let current = "all";
+let score = 0;
+let answered = 0;
+let answeredCards = new Set();
 
-function show(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'))
-  document.getElementById(id).classList.remove('hidden')
+function toggleDark(){
+  document.body.classList.toggle("dark");
 }
 
-function check(el,correct){
-  if(correct){
-    el.classList.add('correct')
-  }else{
-    el.classList.add('wrong')
+function resetScore(){
+  score = 0;
+  answered = 0;
+  answeredCards.clear();
+  document.getElementById("score").textContent = score;
+  document.getElementById("answered").textContent = answered;
+  render();
+}
+
+function showSection(section){
+  current = section;
+  render();
+}
+
+function render(){
+  const term = document.getElementById("search").value.toLowerCase().trim();
+  let html = "";
+
+  const sections = current === "all" ? Object.keys(DATA) : [current];
+
+  sections.forEach(topic => {
+    html += `<div class="card"><h2>${topic}</h2></div>`;
+    DATA[topic].forEach((item, idx) => {
+      const cardId = topic + "_" + idx;
+      const combined = (item.q + " " + item.options.join(" ") + " " + item.explain.correct + " " + item.explain.wrong).toLowerCase();
+      if(term && !combined.includes(term)) return;
+
+      html += `
+      <div class="card" id="${cardId}">
+        <div class="question">${item.q}</div>
+        ${item.options.map((opt,i)=>`
+          <div class="option" onclick="chooseAnswer('${topic}', ${idx}, ${i}, this)">
+            ${String.fromCharCode(65+i)}. ${opt}
+          </div>
+        `).join("")}
+        <div class="explanation" id="exp_${cardId}"></div>
+      </div>`;
+    });
+  });
+
+  document.getElementById("content").innerHTML = html;
+}
+
+function chooseAnswer(topic, idx, selected, el){
+  const item = DATA[topic][idx];
+  const cardId = topic + "_" + idx;
+  const card = document.getElementById(cardId);
+  const options = card.querySelectorAll(".option");
+  const exp = document.getElementById("exp_" + cardId);
+
+  options.forEach((o,i)=>{
+    o.onclick = null;
+    if(i === item.answer) o.classList.add("correct");
+  });
+
+  const isCorrect = selected === item.answer;
+
+  if(!isCorrect){
+    el.classList.add("wrong");
+    exp.innerHTML = `<b>❌ Wrong.</b><br>${item.explain.wrong}<br><br><b>Correct answer:</b> ${String.fromCharCode(65+item.answer)}. ${item.options[item.answer]}`;
+  } else {
+    exp.innerHTML = `<b>✅ Correct.</b><br>${item.explain.correct}`;
+  }
+
+  exp.classList.add("show");
+
+  if(!answeredCards.has(cardId)){
+    answeredCards.add(cardId);
+    answered++;
+    if(isCorrect) score++;
+    document.getElementById("score").textContent = score;
+    document.getElementById("answered").textContent = answered;
   }
 }
 
+render();
 </script>
-
 </body>
 </html>
